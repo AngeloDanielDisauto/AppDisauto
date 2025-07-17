@@ -20,7 +20,8 @@
         "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.angelodanieldisauto.disauto"
     },
     "web": {
       "favicon": "./src/assets/logo.png"
