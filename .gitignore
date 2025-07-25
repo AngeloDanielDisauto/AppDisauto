@@ -1,5 +1,3 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
 # dependencies
 node_modules/
 
@@ -18,10 +16,25 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
-# Metro
-.metro-health-check*
+# Android
+android/.gradle/
+android/app/build/
+android/.idea/
+*.apk
 
-# debug
+# iOS
+ios/Pods/
+ios/build/
+ios/.idea/
+*.xcworkspace
+*.xcuserstate
+
+# Metro & Watchman
+.metro-health-check*
+metro-cache/
+.watchmanconfig
+
+# Debug logs
 npm-debug.*
 yarn-debug.*
 yarn-error.*
@@ -33,5 +46,13 @@ yarn-error.*
 # local env files
 .env*.local
 
-# typescript
+# TypeScript
 *.tsbuildinfo
+
+# IDE settings
+.vscode/
+.idea/
+
+# Temp files
+*.tmp
+*.lock

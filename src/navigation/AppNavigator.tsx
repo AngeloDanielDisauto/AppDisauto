@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import { CatalogoStack } from './CatalogoStack';
 import Orcamento from '../screens/Orcamento';
+import Perfil from '../screens/Perfil';
 import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -16,8 +17,17 @@ export default function AppNavigator() {
           headerShown: false,
           tabBarIcon: ({ color, size }) => {
             let iconName: keyof typeof Ionicons.glyphMap = 'home';
-            if (route.name === 'Home') iconName = 'home';
-            else if (route.name === 'Catalogo') iconName = 'list';
+
+            if (route.name === 'Home') {
+              iconName = 'home';
+            } else if (route.name === 'Catalogo') {
+              iconName = 'list';
+            } else if (route.name === 'Orcamento') {
+              iconName = 'cart-outline';
+            } else if (route.name === 'Perfil') {
+              iconName = 'person';
+            }
+
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: '#007AFF',
@@ -26,32 +36,34 @@ export default function AppNavigator() {
       >
         <Tab.Screen name="Home" component={Home} />
 
-        {/* Detecta a rota interna do Stack */}
         <Tab.Screen
           name="Catalogo"
           component={CatalogoStack}
           options={({ route }) => {
-            //lógica para esconder a TabBar em DetalhesProduo
             const routeName = getFocusedRouteNameFromRoute(route) ?? 'CatalogoScreen';
 
-            // Se está em DetalheProduto, esconde a TabBar
             if (routeName === 'DetalheProduto') {
               return {
                 tabBarStyle: { display: 'none' },
               };
             }
 
-            // Caso contrário, mostra normalmente
             return {
               tabBarStyle: undefined,
             };
           }}
         />
 
-        <Tab.Screen name="Orcamento" component={Orcamento} />
+        <Tab.Screen 
+          name="Orcamento" 
+          component={Orcamento} 
+        />
+
+        <Tab.Screen 
+          name="Perfil" 
+          component={Perfil} 
+        />
       </Tab.Navigator>
-
-
     </NavigationContainer>
   );
 }

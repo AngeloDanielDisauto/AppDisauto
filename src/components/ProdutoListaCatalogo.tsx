@@ -7,7 +7,7 @@ interface ProdutoListaCatalogo {
   produto: Produto;
 }
 
-export default function ProdutoListaCatalogo({ produto }: ProdutoListaCatalogo) {
+export default function ProdutoListaCatalogo ({produto} ) {
   const navigation = useNavigation() as any;
 
   const handlePress = () => {
@@ -18,7 +18,7 @@ export default function ProdutoListaCatalogo({ produto }: ProdutoListaCatalogo) 
     <TouchableOpacity style={styles.container} onPress={handlePress}>
       <Text style={styles.textoNegrito}>{produto.codigo}</Text>
       <Text style={styles.textoNegrito}>{produto.descricao}</Text>
-      <Text style={styles.preco}>R$ {produto.preco}</Text>
+      <Text style={styles.preco}>R$ {produto.preco_bruto}</Text>
     </TouchableOpacity>
   );
 }

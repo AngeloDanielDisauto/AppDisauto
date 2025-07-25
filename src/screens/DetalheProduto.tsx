@@ -36,6 +36,10 @@ export default function DetalheProduto() {
   }
 
 
+  var codSemDigito = produto.codigo.replace(/-.*/, ''); // retira o dígito
+  codSemDigito = codSemDigito.padStart(5, '0'); // adiciona '0' a esquerda até ficar com 5 
+  const url = 'https://www.disauto.com.br/admin/img_produto/ImgProd' +  codSemDigito + '.jpg';
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
 
@@ -53,14 +57,14 @@ export default function DetalheProduto() {
         </View>
 
         <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Estoque</Text>
-          <Text style={styles.cellValor}>{produto.estoque}</Text>
+          <Text style={styles.cellTitulo}>Estoque Lages</Text>
+          <Text style={styles.cellValor}>{produto.estoque_lages}</Text>
         </View>
 
         <View style={styles.row}>
           <Text style={styles.cellTitulo}>Preço</Text>
           <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-            R$ {produto.preco}
+            R$ {produto.preco_bruto}
           </Text>
         </View>
 
@@ -105,8 +109,9 @@ export default function DetalheProduto() {
       </View>
 
       
-      {/* Imagem do produto */}
-      <Image source={{ uri: produto.imagem }} style={styles.img} />
+      {/* Imagem do produto */
+      }
+      <Image source={{ uri: url }} style={styles.img} />
 
       {/* submits */}
       <View style={styles.containerBtn}>
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     marginBottom: 16,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
     borderRadius: 8,
   },
   tabela: {

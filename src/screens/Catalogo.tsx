@@ -1,35 +1,53 @@
-import React, { useState } from "react";
-import { View, TextInput, Text, Image, StyleSheet, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
+import { View, TextInput, Text, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import produtos from "../data/produtos";
+import produtosInicial from "../data/produtos";
 import ProdutoListaCatalogo from "../components/ProdutoListaCatalogo";
 
 export default function Catalogo() {
   const [busca, setBusca] = useState('');
+  const [produtos, setProdutos] = useState(produtosInicial);
+
+
 
   // Filtra os produtos
-  const filteredProdutos = produtos.filter((produto) =>
-    produto.descricao.toLowerCase().includes(busca.toLowerCase()) ||
-    produto.codigo.toLowerCase().includes(busca.toLowerCase())
-  );
+
+
+  async function handleBusca() {
+    const baseApi = 'https://apibancosql.onrender.com/produtos/busca?codigo=';
+
+    await axios.get(baseApi+busca)
+    .then(res => setProdutos(res.data))
+    .catch(err => console.error(err));
+
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
 
       {/* Campo de busca */}
       <View style={styles.buscaContainer}>
-        <TextInput
-          placeholder="Pesquisar por código ou descrição..."
-          value={busca}
-          onChangeText={setBusca}
-          style={styles.buscaInput}
-        />
+        
+          <TextInput
+            placeholder="Pesquisar por código ou descrição..."
+            value={busca}
+            onChangeText={setBusca}
+
+            style={styles.buscaInput}
+          />
+        <TouchableOpacity
+          onPress={handleBusca}
+        >
+          <Text>Enviar</Text>
+        </TouchableOpacity>
+
       </View>
 
       {/* Lista filtrada */}
       <FlatList
-        data={filteredProdutos}
+        data={produtos}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <ProdutoListaCatalogo produto={item} />}
       />
