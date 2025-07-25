@@ -8,8 +8,17 @@ export default function DetalheProduto() {
   const navigation = useNavigation();
   const { produto } = route.params as any;
   const { adicionarProduto, produtosOrcamento } = useAppContext(); //função para add produto no array orçamento
-
+  const [estoqueTotal, setEstoqueTotal] = useState(0);
   const [quantProd, setQuantProd] = useState(0);
+
+  
+  useEffect( () => {
+    // calcular estoque total do produto
+    setEstoqueTotal (Number(produto.estoque_lages) + Number(produto.estoque_joacaba) + Number(produto.estoque_itajai) + Number(produto.estoque_tubarao) + Number(produto.estoque_filial_lages)
+    + Number(produto.estoque_maringa) + Number(produto.estoque_rondonopolis) + Number(produto.estoque_rio_do_sul) + Number(produto.estoque_canoinhas) + Number(produto.estoque_cacador)
+    + Number(produto.estoque_sao_jose) + Number(produto.estoque_sao_miguel) + Number(produto.estoque_guaramirim));
+
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -52,8 +61,40 @@ export default function DetalheProduto() {
         </View>
 
         <View style={styles.row}>
+          <Text style={styles.cellTitulo}>Referência</Text>
+          <Text style={styles.cellValor}>{produto.referencia}</Text>
+        </View>
+
+        <View style={styles.row}>
           <Text style={styles.cellTitulo}>Descrição</Text>
           <Text style={styles.cellValor}>{produto.descricao}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.cellTitulo}>Complemento</Text>
+          <Text style={styles.cellValor}>{produto.dado6}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.cellTitulo}>Observações</Text>
+          <Text style={styles.cellValor}>{produto.observacoes}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.cellTitulo}>Nº Original</Text>
+          <Text style={styles.cellValor}>{produto.dado5}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.cellTitulo}>Marca</Text>
+          <Text style={styles.cellValor}>{produto.marca}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.cellTitulo}>Valor Unit.</Text>
+          <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+            R$ {produto.preco_bruto}
+          </Text>
         </View>
 
         <View style={styles.row}>
@@ -62,37 +103,22 @@ export default function DetalheProduto() {
         </View>
 
         <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Preço</Text>
-          <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-            R$ {produto.preco_bruto}
-          </Text>
+          <Text style={styles.cellTitulo}>Estoque Total</Text>
+          <Text style={styles.cellValor}>{estoqueTotal}</Text>
         </View>
+
+        
 
         {/* Campos extras fictícios */}
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Referência</Text>
-          <Text style={styles.cellValor}>4435</Text>
-        </View>
+        
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Complemento</Text>
-          <Text style={styles.cellValor}>.../89</Text>
-        </View>
+        
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Observações</Text>
-          <Text style={styles.cellValor}>VOLVO</Text>
-        </View>
+        
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Nº Original</Text>
-          <Text style={styles.cellValor}>6834322</Text>
-        </View>
+        
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Marca</Text>
-          <Text style={styles.cellValor}>IBTF</Text>
-        </View>
+        
 
         <View style={styles.row}>
           <Text style={styles.cellTitulo}>Quantidade</Text>
