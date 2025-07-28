@@ -10,13 +10,16 @@ export default function DetalheProduto() {
   const { adicionarProduto, produtosOrcamento } = useAppContext(); //função para add produto no array orçamento
   const [estoqueTotal, setEstoqueTotal] = useState(0);
   const [quantProd, setQuantProd] = useState(0);
+  const precoBrutoProduto = Math.ceil(parseFloat(produto.preco_bruto.replace(',', '.')) * 0.5 * 0.9 * 100) /100;
 
-  
-  useEffect( () => {
+
+
+
+  useEffect(() => {
     // calcular estoque total do produto
-    setEstoqueTotal (Number(produto.estoque_lages) + Number(produto.estoque_joacaba) + Number(produto.estoque_itajai) + Number(produto.estoque_tubarao) + Number(produto.estoque_filial_lages)
-    + Number(produto.estoque_maringa) + Number(produto.estoque_rondonopolis) + Number(produto.estoque_rio_do_sul) + Number(produto.estoque_canoinhas) + Number(produto.estoque_cacador)
-    + Number(produto.estoque_sao_jose) + Number(produto.estoque_sao_miguel) + Number(produto.estoque_guaramirim));
+    setEstoqueTotal(Number(produto.estoque_lages) + Number(produto.estoque_joacaba) + Number(produto.estoque_itajai) + Number(produto.estoque_tubarao) + Number(produto.estoque_filial_lages)
+      + Number(produto.estoque_maringa) + Number(produto.estoque_rondonopolis) + Number(produto.estoque_rio_do_sul) + Number(produto.estoque_canoinhas) + Number(produto.estoque_cacador)
+      + Number(produto.estoque_sao_jose) + Number(produto.estoque_sao_miguel) + Number(produto.estoque_guaramirim));
 
   }, []);
 
@@ -28,6 +31,8 @@ export default function DetalheProduto() {
 
 
   function handleAddCarrinho() {
+
+    
     if (quantProd > 0) {
       const novoProduto = produto;
       novoProduto.quantidade = quantProd;
@@ -35,19 +40,20 @@ export default function DetalheProduto() {
       navigation.goBack();
       alert("adicionado com sucesso!")
     } else {
-      alert("Digite a quantidade"); 
+      alert("Digite a quantidade");
     }
-    
+
   }
-  
+
   function handleIrOrcamento() {
     alert("ir orçamento")
   }
 
 
+
   var codSemDigito = produto.codigo.replace(/-.*/, ''); // retira o dígito
   codSemDigito = codSemDigito.padStart(5, '0'); // adiciona '0' a esquerda até ficar com 5 
-  const url = 'https://www.disauto.com.br/admin/img_produto/ImgProd' +  codSemDigito + '.jpg';
+  const url = 'https://www.disauto.com.br/admin/img_produto/ImgProd' + codSemDigito + '.jpg';
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -93,9 +99,49 @@ export default function DetalheProduto() {
         <View style={styles.row}>
           <Text style={styles.cellTitulo}>Valor Unit.</Text>
           <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-            R$ {produto.preco_bruto}
+            R$ {precoBrutoProduto.toFixed(2)}
           </Text>
         </View>
+
+        { // ------------------- DESCONTO POR UNIDADE ---------------------
+        produto.art_qpc > 0 ? (
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc}</Text>
+            <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc)/100)).toFixed(2)}
+            </Text>
+          </View>
+        ) : null }
+        
+        { // ------------------- DESCONTO POR UNIDADE 1 ---------------------
+        produto.art_qpc1 > 0 ? (
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc1}</Text>
+            <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc1)/100)).toFixed(2)}
+            </Text>
+          </View>
+        ) : null }
+
+        { // ------------------- DESCONTO POR UNIDADE 2 ---------------------
+        produto.art_qpc2 > 0 ? (
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc2}</Text>
+            <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc2)/100)).toFixed(2)}
+            </Text>
+          </View>
+        ) : null }
+
+        { // ------------------- DESCONTO POR UNIDADE 3 ---------------------
+        produto.art_qpc3 > 0 ? (
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc3}</Text>
+            <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc3)/100)).toFixed(2)}
+            </Text>
+          </View>
+        ) : null }
 
         <View style={styles.row}>
           <Text style={styles.cellTitulo}>Estoque Lages</Text>
@@ -107,18 +153,18 @@ export default function DetalheProduto() {
           <Text style={styles.cellValor}>{estoqueTotal}</Text>
         </View>
 
-        
+
 
         {/* Campos extras fictícios */}
-        
 
-        
 
-        
 
-        
 
-        
+
+
+
+
+
 
         <View style={styles.row}>
           <Text style={styles.cellTitulo}>Quantidade</Text>
@@ -128,13 +174,13 @@ export default function DetalheProduto() {
             inputMode="numeric"
             placeholder="0"
             value={String(quantProd)}
-            onChangeText={ (text) => {setQuantProd(Number(text))} }
+            onChangeText={(text) => { setQuantProd(Number(text)) }}
           />
-      </View>
+        </View>
 
       </View>
 
-      
+
       {/* Imagem do produto */
       }
       <Image source={{ uri: url }} style={styles.img} />
@@ -149,7 +195,7 @@ export default function DetalheProduto() {
           <Text style={styles.textBtn}>Ir para o Orçamento</Text>
         </TouchableOpacity>
       </View>
-      
+
     </ScrollView>
   );
 }
