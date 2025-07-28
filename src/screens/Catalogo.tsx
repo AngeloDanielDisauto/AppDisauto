@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { View, TextInput, Text, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Picker } from '@react-native-picker/picker';
+
 
 import produtosInicial from "../data/produtos";
 import ProdutoListaCatalogo from "../components/ProdutoListaCatalogo";
@@ -9,19 +11,59 @@ import ProdutoListaCatalogo from "../components/ProdutoListaCatalogo";
 export default function Catalogo() {
   const [busca, setBusca] = useState('');
   const [produtos, setProdutos] = useState(produtosInicial);
+  const [filtroBusca, setFiltroBusca] = useState('todos');
+  const baseApiBusca = 'https://apibancosql.onrender.com/produtos/busca?';
 
 
 
-  // Filtra os produtos
-
+  // função para busca de produtos
 
   async function handleBusca() {
-    const baseApi = 'https://apibancosql.onrender.com/produtos/busca?codigo=';
 
-    await axios.get(baseApi+busca)
-    .then(res => setProdutos(res.data))
-    .catch(err => console.error(err));
+    switch (filtroBusca) {
+      case 'todos':
+        buscaTodos();
+        break;
 
+      case 'codDisauto':
+        buscaCodDisauto();
+        break;
+
+      case 'codIndustria':
+        buscaCodIndustria();
+        break;
+
+      case 'codOriginal':
+        buscaCodOriginal();
+        break;
+
+      default:
+        buscaTodos();
+    }
+  }
+// busca por todos os campos
+  async function buscaTodos(){
+    await axios.get(baseApiBusca + 'todos=' + busca)
+      .then(res => setProdutos(res.data))
+      .catch(err => console.error(err));
+  }
+  // busca por código disauto
+  async function buscaCodDisauto(){
+    await axios.get(baseApiBusca + 'codDisauto=' + busca)
+      .then(res => setProdutos(res.data))
+      .catch(err => console.error(err));
+  }
+  // busca por código da industria ('referencia' no banco de dados)
+  async function buscaCodIndustria(){
+    await axios.get(baseApiBusca + 'codIndustria=' + busca)
+      .then(res => setProdutos(res.data))
+      .catch(err => console.error(err));
+  }
+  // busca por código original ('dado5' no banco de dados)
+  async function buscaCodOriginal(){
+    await axios.get(baseApiBusca + 'codOriginal=' + busca)
+      .then(res => setProdutos(res.data))
+      .catch(err => console.error(err));
   }
 
   return (
@@ -29,14 +71,24 @@ export default function Catalogo() {
 
       {/* Campo de busca */}
       <View style={styles.buscaContainer}>
-        
-          <TextInput
-            placeholder="Pesquisar por código ou descrição..."
-            value={busca}
-            onChangeText={setBusca}
 
-            style={styles.buscaInput}
-          />
+        <Picker
+          selectedValue={filtroBusca}
+          onValueChange={(value) => setFiltroBusca(value)}
+        >
+          <Picker.Item label="Todos" value="todos" />
+          <Picker.Item label="Código Disauto" value="codDisauto" />
+          <Picker.Item label="Código Industria" value="codIndustria" />
+          <Picker.Item label="Código Original" value="codOriginal" />
+        </Picker>
+
+        <TextInput
+          placeholder="Pesquisar por código ou descrição..."
+          value={busca}
+          onChangeText={setBusca}
+
+          style={styles.buscaInput}
+        />
         <TouchableOpacity
           onPress={handleBusca}
         >
