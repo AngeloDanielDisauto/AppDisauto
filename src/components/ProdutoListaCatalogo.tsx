@@ -29,8 +29,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#EEEEEE',
     padding: 12,
-    marginVertical: 4,
-    borderRadius: 6,
   },
   textoNegrito: {
     fontWeight: 'bold',
