@@ -1,19 +1,25 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ProdutoOrcamento } from '../data/types';
+import { ProdutoComEstoque, ProdutoOrcamento } from '../data/types';
+
+type DetalheProdutoParams = {
+  DetalheProduto: {
+    produto: ProdutoComEstoque;
+  };
+};
 
 export default function DetalheProduto() {
-  const route = useRoute();
+  const route = useRoute<RouteProp<DetalheProdutoParams, 'DetalheProduto'>>();
+  const { produto } = route.params;
+
   const navigation = useNavigation();
-  const { produto } = route.params as any;
   const { adicionarProduto, produtosOrcamento } = useAppContext(); //função para add produto no array orçamento
   const [estoqueTotal, setEstoqueTotal] = useState(0);
   const [quantProd, setQuantProd] = useState(0);
   const precoBrutoProduto = Math.ceil(parseFloat(produto.preco_bruto.replace(',', '.')) * 0.5 * 0.9 * 100) / 100;
-
 
 
 

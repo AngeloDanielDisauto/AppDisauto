@@ -4,13 +4,12 @@ import { View, TextInput, Text, Image, StyleSheet, FlatList, TouchableOpacity } 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 
-
-import produtosInicial from "../data/produtos";
+import { ProdutoComEstoque } from "../data/types";
 import ProdutoListaCatalogo from "../components/ProdutoListaCatalogo";
 
 export default function Catalogo() {
   const [busca, setBusca] = useState('');
-  const [produtos, setProdutos] = useState(produtosInicial);
+  const [produtos, setProdutos] = useState<ProdutoComEstoque[]>([]);
   const [filtroBusca, setFiltroBusca] = useState('todos');
   const baseApiBusca = 'https://apibancosql.onrender.com/produtos/busca?';
 
@@ -105,10 +104,13 @@ export default function Catalogo() {
         <Text style={[styles.textoCabecalho, { width: '70%' }]}>Descrição</Text>
         <Text style={[styles.textoCabecalho, { width: '15%' }]}>Preço</Text>
       </View>
+
       <FlatList
         data={produtos}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <ProdutoListaCatalogo produto={item} />}
+        renderItem={({ item }) => {
+          return <ProdutoListaCatalogo produto={item} />;
+        }}
       />
 
     </SafeAreaView>

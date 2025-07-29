@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import { Produto } from "../data/types";
+import { ProdutoComEstoque } from "../data/types";
 
-interface ProdutoListaCatalogo {
-  produto: Produto;
+interface Props {
+  produto: ProdutoComEstoque;
 }
 
-export default function ProdutoListaCatalogo ({produto} ) {
+export default function ProdutoListaCatalogo ({produto}: Props ) {
   const navigation = useNavigation() as any;
 
   const handlePress = () => {
