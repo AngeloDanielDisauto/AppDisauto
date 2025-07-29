@@ -80,7 +80,16 @@ export default function DetalheProduto() {
   }
 
   function handleIrOrcamento() {
-    alert("ir orçamento")
+    if (quantProd > 0) {
+      const novoProduto = formatarProduto();
+
+      adicionarProduto(novoProduto);
+      navigation.getParent()?.navigate('Orcamento');
+      alert("adicionado com sucesso!")
+    } else {
+      alert("Digite a quantidade");
+    }
+
   }
 
 
