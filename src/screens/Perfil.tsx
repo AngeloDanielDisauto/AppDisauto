@@ -19,7 +19,7 @@ export default function Perfil() {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
 
 
             <View style={styles.container}>
@@ -78,7 +78,7 @@ export default function Perfil() {
 
 
 
-        </SafeAreaView>
+        </View>
     );
 }
 

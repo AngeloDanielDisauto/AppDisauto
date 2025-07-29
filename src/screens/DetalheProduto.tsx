@@ -90,7 +90,7 @@ export default function DetalheProduto() {
   const url = 'https://www.disauto.com.br/admin/img_produto/ImgProd' + codSemDigito + '.jpg';
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
 
       <ScrollView contentContainerStyle={styles.container}>
 
@@ -220,7 +220,7 @@ export default function DetalheProduto() {
         </View>
 
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

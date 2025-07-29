@@ -7,7 +7,7 @@ import GridBotoes from "../components/GridBotoesHome";
 export default function Home() {
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <ScrollView 
                 showsVerticalScrollIndicator={false} // remove a barrinha lateral
             >
@@ -25,7 +25,7 @@ export default function Home() {
                     style={{width: '100%', height: 200}}
                 />
             </ScrollView>
-        </SafeAreaView>
+        </View>
         
     );
 }

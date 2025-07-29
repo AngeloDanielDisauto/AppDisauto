@@ -14,7 +14,7 @@ export default function Orcamento() {
     const { gerarECompartilharPdf } = useGerarPdfOrcamento();
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
 
 
             <View style={styles.container}>
@@ -28,7 +28,7 @@ export default function Orcamento() {
             <Button title="Gerar e Compartilhar PDF" onPress={gerarECompartilharPdf} />
 
 
-        </SafeAreaView>
+        </View>
     );
 }
 

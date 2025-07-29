@@ -98,7 +98,7 @@ export default function Catalogo() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
 
       {/* Campo de busca */}
       <View style={styles.orcamentoContainer}>
@@ -162,13 +162,13 @@ export default function Catalogo() {
         )}
       </View>
 
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   orcamentoContainer: {
-    padding: 10,
+    paddingTop: 10,
     backgroundColor: '#f2f2f2',
   },
   containerBusca: {
