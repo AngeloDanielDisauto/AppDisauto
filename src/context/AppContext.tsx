@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { ProdutoComQuantidade } from "../data/types"; // importa o tipo já existente de Produto
+import { ProdutoOrcamento } from "../data/types"; // importa o tipo já existente de Produto
 
 // Define o formato do contexto (o que estará disponível para toda a aplicação)
 interface AppContextType {
-  produtosOrcamento: ProdutoComQuantidade[]; // lista de produtos adicionados ao orçamento
-  adicionarProduto: (produto: ProdutoComQuantidade) => void; // função para adicionar produto
+  produtosOrcamento: ProdutoOrcamento[]; // lista de produtos adicionados ao orçamento
+  adicionarProduto: (produto: ProdutoOrcamento) => void; // função para adicionar produto
   removerProduto: (id: number) => void;         // função para remover produto pelo ID
   limparOrcamento: () => void;                  // função para limpar toda a lista
   totalOrcamento: number; // total do orçamento
@@ -16,10 +16,10 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 // Provider: componente que vai "envolver" o app e compartilhar o estado
 export function AppProvider({ children }: { children: ReactNode }) {
   // Estado global: lista de produtos selecionados para orçamento
-  const [produtosOrcamento, setProdutosOrcamento] = useState<ProdutoComQuantidade[]>([]);
+  const [produtosOrcamento, setProdutosOrcamento] = useState<ProdutoOrcamento[]>([]);
 
   // Adiciona um produto ao orçamento
-  const adicionarProduto = (produto: ProdutoComQuantidade) => {
+  const adicionarProduto = (produto: ProdutoOrcamento) => {
     setProdutosOrcamento((prev) => {
       // Verifica se já existe para evitar duplicados (opcional)
       const jaExiste = prev.find((p) => p.id === produto.id);

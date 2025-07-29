@@ -2,6 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ProdutoOrcamento } from '../data/types';
 
 export default function DetalheProduto() {
   const route = useRoute();
@@ -10,7 +12,7 @@ export default function DetalheProduto() {
   const { adicionarProduto, produtosOrcamento } = useAppContext(); //função para add produto no array orçamento
   const [estoqueTotal, setEstoqueTotal] = useState(0);
   const [quantProd, setQuantProd] = useState(0);
-  const precoBrutoProduto = Math.ceil(parseFloat(produto.preco_bruto.replace(',', '.')) * 0.5 * 0.9 * 100) /100;
+  const precoBrutoProduto = Math.ceil(parseFloat(produto.preco_bruto.replace(',', '.')) * 0.5 * 0.9 * 100) / 100;
 
 
 
@@ -30,12 +32,37 @@ export default function DetalheProduto() {
   }, [navigation, produto]);
 
 
-  function handleAddCarrinho() {
+  function formatarProduto() {
+    // verifica a quantidade de compra para enviar preço com desconto por quantidade
+    var precoFinal = 0;
+    if (quantProd < produto.art_qpc){ 
+      // esse primeiro if evita fazer o restante do processamento na maioria dos casos
+      precoFinal = precoBrutoProduto;
+      
+    } else if (quantProd >= produto.art_qpc3) {
+      precoFinal = (precoBrutoProduto * (1 - Number(produto.art_dpc3) / 100));
+    } else if (quantProd >= produto.art_qpc2) {
+      precoFinal = (precoBrutoProduto * (1 - Number(produto.art_dpc2) / 100));
+    } else if (quantProd >= produto.art_qpc1) {
+      precoFinal = (precoBrutoProduto * (1 - Number(produto.art_dpc1) / 100));
+    } else if (quantProd >= produto.art_qpc) {
+      precoFinal = (precoBrutoProduto * (1 - Number(produto.art_dpc) / 100));
+    }
 
-    
+    const novoProduto: ProdutoOrcamento = {
+      id: produto.id,
+      codigo: produto.codigo,
+      descricao: produto.descricao,
+      preco: precoFinal,
+      quantidade: quantProd
+    };
+    return novoProduto;
+  }
+
+  function handleAddCarrinho() {
     if (quantProd > 0) {
-      const novoProduto = produto;
-      novoProduto.quantidade = quantProd;
+      const novoProduto = formatarProduto();
+
       adicionarProduto(novoProduto);
       navigation.goBack();
       alert("adicionado com sucesso!")
@@ -56,147 +83,150 @@ export default function DetalheProduto() {
   const url = 'https://www.disauto.com.br/admin/img_produto/ImgProd' + codSemDigito + '.jpg';
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
 
-      {/* Tabela de detalhes */}
-      <View style={styles.tabela}>
+      <ScrollView contentContainerStyle={styles.container}>
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Código</Text>
-          <Text style={styles.cellValor}>{produto.codigo}</Text>
-        </View>
+        {/* Tabela de detalhes */}
+        <View style={styles.tabela}>
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Referência</Text>
-          <Text style={styles.cellValor}>{produto.referencia}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Descrição</Text>
-          <Text style={styles.cellValor}>{produto.descricao}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Complemento</Text>
-          <Text style={styles.cellValor}>{produto.dado6}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Observações</Text>
-          <Text style={styles.cellValor}>{produto.observacoes}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Nº Original</Text>
-          <Text style={styles.cellValor}>{produto.dado5}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Marca</Text>
-          <Text style={styles.cellValor}>{produto.marca}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Valor Unit.</Text>
-          <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-            R$ {precoBrutoProduto.toFixed(2)}
-          </Text>
-        </View>
-
-        { // ------------------- DESCONTO POR UNIDADE ---------------------
-        produto.art_qpc > 0 ? (
           <View style={styles.row}>
-            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc}</Text>
+            <Text style={styles.cellTitulo}>Código</Text>
+            <Text style={styles.cellValor}>{produto.codigo}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Referência</Text>
+            <Text style={styles.cellValor}>{produto.referencia}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Descrição</Text>
+            <Text style={styles.cellValor}>{produto.descricao}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Complemento</Text>
+            <Text style={styles.cellValor}>{produto.dado6}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Observações</Text>
+            <Text style={styles.cellValor}>{produto.observacoes}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Nº Original</Text>
+            <Text style={styles.cellValor}>{produto.dado5}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Marca</Text>
+            <Text style={styles.cellValor}>{produto.marca}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Valor Unit.</Text>
             <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc)/100)).toFixed(2)}
+              R$ {precoBrutoProduto.toFixed(2)}
             </Text>
           </View>
-        ) : null }
-        
-        { // ------------------- DESCONTO POR UNIDADE 1 ---------------------
-        produto.art_qpc1 > 0 ? (
-          <View style={styles.row}>
-            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc1}</Text>
-            <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc1)/100)).toFixed(2)}
-            </Text>
-          </View>
-        ) : null }
 
-        { // ------------------- DESCONTO POR UNIDADE 2 ---------------------
-        produto.art_qpc2 > 0 ? (
-          <View style={styles.row}>
-            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc2}</Text>
-            <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc2)/100)).toFixed(2)}
-            </Text>
-          </View>
-        ) : null }
+          { // ------------------- DESCONTO POR UNIDADE ---------------------
+            produto.art_qpc > 0 ? (
+              <View style={styles.row}>
+                <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc}</Text>
+                <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+                  R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc) / 100)).toFixed(2)}
+                </Text>
+              </View>
+            ) : null}
 
-        { // ------------------- DESCONTO POR UNIDADE 3 ---------------------
-        produto.art_qpc3 > 0 ? (
-          <View style={styles.row}>
-            <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc3}</Text>
-            <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
-              R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc3)/100)).toFixed(2)}
-            </Text>
-          </View>
-        ) : null }
+          { // ------------------- DESCONTO POR UNIDADE 1 ---------------------
+            produto.art_qpc1 > 0 ? (
+              <View style={styles.row}>
+                <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc1}</Text>
+                <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+                  R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc1) / 100)).toFixed(2)}
+                </Text>
+              </View>
+            ) : null}
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Estoque Lages</Text>
-          <Text style={styles.cellValor}>{produto.estoque_lages}</Text>
+          { // ------------------- DESCONTO POR UNIDADE 2 ---------------------
+            produto.art_qpc2 > 0 ? (
+              <View style={styles.row}>
+                <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc2}</Text>
+                <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+                  R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc2) / 100)).toFixed(2)}
+                </Text>
+              </View>
+            ) : null}
+
+          { // ------------------- DESCONTO POR UNIDADE 3 ---------------------
+            produto.art_qpc3 > 0 ? (
+              <View style={styles.row}>
+                <Text style={styles.cellTitulo}>Valor Unit. Acima de: {produto.art_qpc3}</Text>
+                <Text style={[styles.cellValor, { color: 'green', fontWeight: 'bold' }]}>
+                  R$ {(precoBrutoProduto * (1 - Number(produto.art_dpc3) / 100)).toFixed(2)}
+                </Text>
+              </View>
+            ) : null}
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Lages</Text>
+            <Text style={styles.cellValor}>{produto.estoque_lages}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Total</Text>
+            <Text style={styles.cellValor}>{estoqueTotal}</Text>
+          </View>
+
+
+
+          {/* Campos extras fictícios */}
+
+
+
+
+
+
+
+
+
+
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Quantidade</Text>
+            <TextInput
+              style={styles.cellInput}
+              keyboardType="numeric"
+              inputMode="numeric"
+              placeholder="0"
+              value={String(quantProd)}
+              onChangeText={(text) => { setQuantProd(Number(text)) }}
+            />
+          </View>
+
         </View>
 
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Estoque Total</Text>
-          <Text style={styles.cellValor}>{estoqueTotal}</Text>
+
+        {/* Imagem do produto */
+        }
+        <Image source={{ uri: url }} style={styles.img} />
+
+        {/* submits */}
+        <View style={styles.containerBtn}>
+          <TouchableOpacity style={styles.btnInput} onPress={handleAddCarrinho}>
+            <Text style={styles.textBtn}>Adicionar ao Carrinho</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnInput} onPress={handleIrOrcamento}>
+            <Text style={styles.textBtn}>Ir para o Orçamento</Text>
+          </TouchableOpacity>
         </View>
 
-
-
-        {/* Campos extras fictícios */}
-
-
-
-
-
-
-
-
-
-
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Quantidade</Text>
-          <TextInput
-            style={styles.cellInput}
-            keyboardType="numeric"
-            inputMode="numeric"
-            placeholder="0"
-            value={String(quantProd)}
-            onChangeText={(text) => { setQuantProd(Number(text)) }}
-          />
-        </View>
-
-      </View>
-
-
-      {/* Imagem do produto */
-      }
-      <Image source={{ uri: url }} style={styles.img} />
-
-      {/* submits */}
-      <View style={styles.containerBtn}>
-        <TouchableOpacity style={styles.btnInput} onPress={handleAddCarrinho}>
-          <Text style={styles.textBtn}>Adicionar ao Carrinho</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnInput} onPress={handleIrOrcamento}>
-          <Text style={styles.textBtn}>Ir para o Orçamento</Text>
-        </TouchableOpacity>
-      </View>
-
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

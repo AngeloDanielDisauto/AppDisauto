@@ -41,26 +41,26 @@ export default function Catalogo() {
         buscaTodos();
     }
   }
-// busca por todos os campos
-  async function buscaTodos(){
+  // busca por todos os campos
+  async function buscaTodos() {
     await axios.get(baseApiBusca + 'todos=' + busca)
       .then(res => setProdutos(res.data))
       .catch(err => console.error(err));
   }
   // busca por código disauto
-  async function buscaCodDisauto(){
+  async function buscaCodDisauto() {
     await axios.get(baseApiBusca + 'codDisauto=' + busca)
       .then(res => setProdutos(res.data))
       .catch(err => console.error(err));
   }
   // busca por código da industria ('referencia' no banco de dados)
-  async function buscaCodIndustria(){
+  async function buscaCodIndustria() {
     await axios.get(baseApiBusca + 'codIndustria=' + busca)
       .then(res => setProdutos(res.data))
       .catch(err => console.error(err));
   }
   // busca por código original ('dado5' no banco de dados)
-  async function buscaCodOriginal(){
+  async function buscaCodOriginal() {
     await axios.get(baseApiBusca + 'codOriginal=' + busca)
       .then(res => setProdutos(res.data))
       .catch(err => console.error(err));
@@ -75,6 +75,7 @@ export default function Catalogo() {
         <Picker
           selectedValue={filtroBusca}
           onValueChange={(value) => setFiltroBusca(value)}
+          style={styles.escolhaBusca}
         >
           <Picker.Item label="Todos" value="todos" />
           <Picker.Item label="Código Disauto" value="codDisauto" />
@@ -98,6 +99,12 @@ export default function Catalogo() {
       </View>
 
       {/* Lista filtrada */}
+
+      <View style={styles.cabecalhoProdutos}>
+        <Text style={[styles.textoCabecalho, { width: '15%' }]}>Código</Text>
+        <Text style={[styles.textoCabecalho, { width: '70%' }]}>Descrição</Text>
+        <Text style={[styles.textoCabecalho, { width: '15%' }]}>Preço</Text>
+      </View>
       <FlatList
         data={produtos}
         keyExtractor={(item) => item.id.toString()}
@@ -120,4 +127,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
   },
+  escolhaBusca: {
+    color: "#000",
+
+  },
+  cabecalhoProdutos: {
+    flexDirection: 'row',
+    backgroundColor: '#861a22',
+    padding: 12,
+  },
+  textoCabecalho: {
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: "center"
+  }
 });

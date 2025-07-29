@@ -6,10 +6,9 @@ export interface Produto {
   preco: number;
 }
 
-export interface ProdutoComQuantidade {
+export interface ProdutoOrcamento {
   id: number;
   codigo: string;
-  estoque: number;
   descricao: string;
   preco: number;
   quantidade: number;
