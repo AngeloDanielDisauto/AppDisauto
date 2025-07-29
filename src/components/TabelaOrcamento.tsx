@@ -1,13 +1,24 @@
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, FlatList } from 'react-native';
-import { ProdutoComQuantidade } from '../data/types';
+import { ScrollView, View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { ProdutoOrcamento } from '../data/types';
+import { Ionicons } from '@expo/vector-icons';
+import { useAppContext } from '../context/AppContext';
 
 interface Props {
-  produtos: ProdutoComQuantidade[];
+  produtos: ProdutoOrcamento[];
   totalGeral: number;
 }
 
+
+
+
 export default function TabelaOrcamento({ produtos, totalGeral }: Props) {
+  const { removerProduto } = useAppContext(); //função para add produto no array orçamento
+  
+
+  function handleApagarItem(produto: ProdutoOrcamento) {
+    removerProduto(produto.id)
+  }
   return (
     <ScrollView horizontal>
       <View>
@@ -18,6 +29,7 @@ export default function TabelaOrcamento({ produtos, totalGeral }: Props) {
           <Text style={[styles.cellTabelaCabecalho, { width: 100 }]}>Preço</Text>
           <Text style={[styles.cellTabelaCabecalho, { width: 100 }]}>Qtd</Text>
           <Text style={[styles.cellTabelaCabecalho, { width: 120 }]}>Total</Text>
+          <Text style={[styles.cellTabelaCabecalho, { width: 40 }]}></Text>
         </View>
 
         {/* Lista de produtos */}
@@ -28,11 +40,14 @@ export default function TabelaOrcamento({ produtos, totalGeral }: Props) {
             <View style={styles.linhaTabela}>
               <Text style={[styles.cellTabela, { width: 100 }]}>{item.codigo}</Text>
               <Text style={[styles.cellTabela, { width: 200 }]}>{item.descricao}</Text>
-              <Text style={[styles.cellTabelaPreco, { width: 100 }]}>R${item.preco}</Text>
+              <Text style={[styles.cellTabelaPreco, { width: 100 }]}>R${(item.preco).toFixed(2)}</Text>
               <Text style={[styles.cellTabela, { width: 100 }]}>{item.quantidade}</Text>
               <Text style={[styles.cellTabela, { width: 120 }]}>
-                R${item.preco * item.quantidade}
+                R${(item.preco * item.quantidade).toFixed(2)}
               </Text>
+              <TouchableOpacity style={[styles.cellTabela, { width: 40 }]} onPress={() => handleApagarItem(item)}>
+                <Ionicons name={'trash'} size={20} />
+              </TouchableOpacity>
             </View>
           )}
         />
@@ -42,6 +57,8 @@ export default function TabelaOrcamento({ produtos, totalGeral }: Props) {
           <Text style={[styles.textoTotalValor, { width: 120 }]}>
             R${totalGeral.toFixed(2)}
           </Text>
+          <Text style={[styles.cellTabelaCabecalho, { width: 40 }]}></Text>
+
         </View>
 
       </View>
