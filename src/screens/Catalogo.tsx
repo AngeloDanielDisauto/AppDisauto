@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { View, TextInput, Text, Image, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, TextInput, Text, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 
@@ -11,12 +11,13 @@ export default function Catalogo() {
   const [busca, setBusca] = useState('');
   const [produtos, setProdutos] = useState<ProdutoComEstoque[]>([]); // array de produto com tipagem
   const [filtroBusca, setFiltroBusca] = useState('todos');
+  const [carregando, setCarregando] = useState(false);
+  const [produtosEncontrados, setProdutosEncontrados] = useState(0);
   const baseApiBusca = 'https://apibancosql.onrender.com/produtos/busca?';
 
 
 
   // função para busca de produtos
-
   async function handleBusca() {
 
     switch (filtroBusca) {
@@ -40,64 +41,105 @@ export default function Catalogo() {
         buscaTodos();
     }
   }
+  // -------------------------------- AREA BUSCAS ---------------------------------------------
+  // to do: mostrar quantidade de resultados; caso não ache nada, mostrar isso para o usuário
+
   // busca por todos os campos
   async function buscaTodos() {
-    await axios.get(baseApiBusca + 'todos=' + busca)
-      .then(res => setProdutos(res.data))
-      .catch(err => console.error(err));
+    setCarregando(true); // ativa o indicador de carregamento da busca
+    try {
+      const res = await axios.get(baseApiBusca + 'todos=' + busca);
+      setProdutos(res.data);
+      setProdutosEncontrados(res.data.length);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCarregando(false); // desativa o indicador de carregamento da busca independente do resultado
+    }
   }
   // busca por código disauto
   async function buscaCodDisauto() {
-    await axios.get(baseApiBusca + 'codDisauto=' + busca)
-      .then(res => setProdutos(res.data))
-      .catch(err => console.error(err));
+    setCarregando(true); // ativa o indicador de carregamento da busca
+    try {
+      const res = await axios.get(baseApiBusca + 'codDisauto=' + busca);
+      setProdutos(res.data);
+      setProdutosEncontrados(res.data.length);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCarregando(false); // desativa o indicador de carregamento da busca independente do resultado
+    }
   }
   // busca por código da industria ('referencia' no banco de dados)
-  async function buscaCodIndustria() {
-    await axios.get(baseApiBusca + 'codIndustria=' + busca)
-      .then(res => setProdutos(res.data))
-      .catch(err => console.error(err));
+  async function buscaCodIndustria() {    
+    setCarregando(true); // ativa o indicador de carregamento da busca
+    try {
+      const res = await axios.get(baseApiBusca + 'codIndustria=' + busca);
+      setProdutos(res.data);
+      setProdutosEncontrados(res.data.length);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCarregando(false); // desativa o indicador de carregamento da busca independente do resultado
+    }
   }
   // busca por código original ('dado5' no banco de dados)
   async function buscaCodOriginal() {
-    await axios.get(baseApiBusca + 'codOriginal=' + busca)
-      .then(res => setProdutos(res.data))
-      .catch(err => console.error(err));
+    setCarregando(true); // ativa o indicador de carregamento da busca
+    try {
+      const res = await axios.get(baseApiBusca + 'codOriginal=' + busca);
+      setProdutos(res.data);
+      setProdutosEncontrados(res.data.length);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCarregando(false); // desativa o indicador de carregamento da busca independente do resultado
+    }
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top', 'bottom', 'left', 'right']}>
 
       {/* Campo de busca */}
-      <View style={styles.buscaContainer}>
-
-        <Picker
-          selectedValue={filtroBusca}
-          onValueChange={(value) => setFiltroBusca(value)}
-          style={styles.escolhaBusca}
-        >
-          <Picker.Item label="Todos" value="todos" />
-          <Picker.Item label="Código Disauto" value="codDisauto" />
-          <Picker.Item label="Código Industria" value="codIndustria" />
-          <Picker.Item label="Código Original" value="codOriginal" />
-        </Picker>
+      <View style={styles.orcamentoContainer}>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={filtroBusca}
+            onValueChange={(value) => setFiltroBusca(value)}
+            style={styles.escolhaBusca}
+            mode="dropdown"
+            dropdownIconColor="#000"
+          >
+            <Picker.Item label="Todos" value="todos" />
+            <Picker.Item label="Código Disauto" value="codDisauto" />
+            <Picker.Item label="Código Industria" value="codIndustria" />
+            <Picker.Item label="Código Original" value="codOriginal" />
+          </Picker>
+        </View>
 
         <TextInput
           placeholder="Pesquisar por código ou descrição..."
           value={busca}
           onChangeText={setBusca}
-
+          onSubmitEditing={handleBusca}
           style={styles.buscaInput}
         />
-        <TouchableOpacity
-          onPress={handleBusca}
-        >
-          <Text>Enviar</Text>
-        </TouchableOpacity>
+
+        <View style={styles.containerBusca}>
+          <TouchableOpacity
+            onPress={handleBusca}
+            style={styles.btnBuscar}
+          >
+            <Text style={styles.txtBtnBuscar}>Enviar</Text>
+          </TouchableOpacity>
+
+          { produtosEncontrados > 0 ? <Text style={{color: "#861a22"}}>{produtosEncontrados} Produtos encontrados</Text> : null}
+        </View>
+
 
       </View>
 
-      {/* Lista filtrada */}
+      {/* cabeçalho tabela da busca */}
 
       <View style={styles.cabecalhoProdutos}>
         <Text style={[styles.textoCabecalho, { width: '15%' }]}>Código</Text>
@@ -105,22 +147,33 @@ export default function Catalogo() {
         <Text style={[styles.textoCabecalho, { width: '15%' }]}>Preço</Text>
       </View>
 
-      <FlatList
-        data={produtos}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => {
-          return <ProdutoListaCatalogo produto={item} />;
-        }}
-      />
+      <View style={{ flex: 1 }}>
+        {/* LÓGICA TERNÁRIA PARA APLICAR O CARREGAMENTO DURANTE A BUSCA, condição 'carregando' ativa o <ActivityIndicator> */}
+        {carregando ? (
+          <ActivityIndicator size="large" color="#861a22" style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={produtos}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => { 
+              return <ProdutoListaCatalogo produto={item} />;
+            }}
+          />
+        )}
+      </View>
 
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  buscaContainer: {
+  orcamentoContainer: {
     padding: 10,
     backgroundColor: '#f2f2f2',
+  },
+  containerBusca: {
+    display: 'flex',
+    alignItems: "flex-end"
   },
   buscaInput: {
     backgroundColor: '#fff',
@@ -128,10 +181,28 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: '#ccc',
+    marginVertical: 15
+  },
+  btnBuscar: {
+    width: 90,
+    padding: 8,
+    backgroundColor: "#861a22",
+    borderRadius: 8,
+  },
+  txtBtnBuscar: {
+    fontSize: 22,
+    color: "#fff",
+    textAlign: 'center',
+  },
+  pickerContainer: {
+    color: "#000",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    marginVertical: 15
   },
   escolhaBusca: {
     color: "#000",
-
   },
   cabecalhoProdutos: {
     flexDirection: 'row',
