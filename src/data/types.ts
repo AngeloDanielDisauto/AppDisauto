@@ -1,3 +1,4 @@
+// tipagem obrigatória com modelo que vem do banco de dados
 export interface ProdutoComEstoque {
   id: number;
   id_fornecedor: number;

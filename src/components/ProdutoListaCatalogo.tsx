@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { ProdutoComEstoque } from "../data/types";
 
+// precisa receber o produto com as propriedades que vem do banco de dados 
 interface Props {
   produto: ProdutoComEstoque;
 }

@@ -9,7 +9,7 @@ import ProdutoListaCatalogo from "../components/ProdutoListaCatalogo";
 
 export default function Catalogo() {
   const [busca, setBusca] = useState('');
-  const [produtos, setProdutos] = useState<ProdutoComEstoque[]>([]);
+  const [produtos, setProdutos] = useState<ProdutoComEstoque[]>([]); // array de produto com tipagem
   const [filtroBusca, setFiltroBusca] = useState('todos');
   const baseApiBusca = 'https://apibancosql.onrender.com/produtos/busca?';
 

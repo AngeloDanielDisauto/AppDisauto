@@ -5,6 +5,7 @@ import { useAppContext } from '../context/AppContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProdutoComEstoque, ProdutoOrcamento } from '../data/types';
 
+// tipo do produto para receber pela route
 type DetalheProdutoParams = {
   DetalheProduto: {
     produto: ProdutoComEstoque;
@@ -12,11 +13,11 @@ type DetalheProdutoParams = {
 };
 
 export default function DetalheProduto() {
-  const route = useRoute<RouteProp<DetalheProdutoParams, 'DetalheProduto'>>();
+  const route = useRoute<RouteProp<DetalheProdutoParams, 'DetalheProduto'>>(); // recebe da rota o produto com a tipagem
   const { produto } = route.params;
 
   const navigation = useNavigation();
-  const { adicionarProduto, produtosOrcamento } = useAppContext(); //função para add produto no array orçamento
+  const { adicionarProduto } = useAppContext(); //função para add produto no array orçamento
   const [estoqueTotal, setEstoqueTotal] = useState(0);
   const [quantProd, setQuantProd] = useState(0);
   const precoBrutoProduto = Math.ceil(parseFloat(produto.preco_bruto.replace(',', '.')) * 0.5 * 0.9 * 100) / 100;
@@ -187,19 +188,6 @@ export default function DetalheProduto() {
             <Text style={styles.cellTitulo}>Estoque Total</Text>
             <Text style={styles.cellValor}>{estoqueTotal}</Text>
           </View>
-
-
-
-          {/* Campos extras fictícios */}
-
-
-
-
-
-
-
-
-
 
           <View style={styles.row}>
             <Text style={styles.cellTitulo}>Quantidade</Text>
