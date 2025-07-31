@@ -22,72 +22,33 @@ export default function Catalogo() {
 
     switch (filtroBusca) {
       case 'todos':
-        buscaTodos();
+        buscaPorCod('todos=');
         break;
 
       case 'codDisauto':
-        buscaCodDisauto();
+        buscaPorCod('codDisauto=');
         break;
 
       case 'codIndustria':
-        buscaCodIndustria();
+        buscaPorCod('codIndustria=');
         break;
 
       case 'codOriginal':
-        buscaCodOriginal();
+        buscaPorCod('codOriginal=');
         break;
 
       default:
-        buscaTodos();
+        buscaPorCod('todos=');
     }
   }
   // -------------------------------- AREA BUSCAS ---------------------------------------------
-  // to do: mostrar quantidade de resultados; caso não ache nada, mostrar isso para o usuário
+  // to do: caso não ache nada, mostrar isso para o usuário
 
-  // busca por todos os campos
-  async function buscaTodos() {
+  // busca 
+  async function buscaPorCod(filtro: string) {
     setCarregando(true); // ativa o indicador de carregamento da busca
     try {
-      const res = await axios.get(baseApiBusca + 'todos=' + busca);
-      setProdutos(res.data);
-      setProdutosEncontrados(res.data.length);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCarregando(false); // desativa o indicador de carregamento da busca independente do resultado
-    }
-  }
-  // busca por código disauto
-  async function buscaCodDisauto() {
-    setCarregando(true); // ativa o indicador de carregamento da busca
-    try {
-      const res = await axios.get(baseApiBusca + 'codDisauto=' + busca);
-      setProdutos(res.data);
-      setProdutosEncontrados(res.data.length);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCarregando(false); // desativa o indicador de carregamento da busca independente do resultado
-    }
-  }
-  // busca por código da industria ('referencia' no banco de dados)
-  async function buscaCodIndustria() {    
-    setCarregando(true); // ativa o indicador de carregamento da busca
-    try {
-      const res = await axios.get(baseApiBusca + 'codIndustria=' + busca);
-      setProdutos(res.data);
-      setProdutosEncontrados(res.data.length);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCarregando(false); // desativa o indicador de carregamento da busca independente do resultado
-    }
-  }
-  // busca por código original ('dado5' no banco de dados)
-  async function buscaCodOriginal() {
-    setCarregando(true); // ativa o indicador de carregamento da busca
-    try {
-      const res = await axios.get(baseApiBusca + 'codOriginal=' + busca);
+      const res = await axios.get(baseApiBusca + filtro + busca);
       setProdutos(res.data);
       setProdutosEncontrados(res.data.length);
     } catch (err) {
