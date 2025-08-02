@@ -7,7 +7,7 @@ import { Picker } from '@react-native-picker/picker';
 import { ProdutoComEstoque } from "../data/types";
 import ProdutoListaCatalogo from "../components/ProdutoListaCatalogo";
 
-export default function Catalogo() {
+export default function Produtos() {
   const [busca, setBusca] = useState('');
   const [produtos, setProdutos] = useState<ProdutoComEstoque[]>([]); // array de produto com tipagem
   const [filtroBusca, setFiltroBusca] = useState('todos');
@@ -22,30 +22,30 @@ export default function Catalogo() {
 
     switch (filtroBusca) {
       case 'todos':
-        buscaPorCod('todos=');
+        buscaPorFiltro('todos=');
         break;
 
       case 'codDisauto':
-        buscaPorCod('codDisauto=');
+        buscaPorFiltro('codDisauto=');
         break;
 
       case 'codIndustria':
-        buscaPorCod('codIndustria=');
+        buscaPorFiltro('codIndustria=');
         break;
 
       case 'codOriginal':
-        buscaPorCod('codOriginal=');
+        buscaPorFiltro('codOriginal=');
         break;
 
       default:
-        buscaPorCod('todos=');
+        buscaPorFiltro('todos=');
     }
   }
   // -------------------------------- AREA BUSCAS ---------------------------------------------
   // to do: caso não ache nada, mostrar isso para o usuário
 
   // busca 
-  async function buscaPorCod(filtro: string) {
+  async function buscaPorFiltro(filtro: string) {
     setCarregando(true); // ativa o indicador de carregamento da busca
     try {
       const res = await axios.get(baseApiBusca + filtro + busca);

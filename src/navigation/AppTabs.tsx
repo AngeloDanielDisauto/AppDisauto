@@ -1,0 +1,70 @@
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+
+import Home from '../screens/Home';
+import { ProdutosStack } from './ProdutosStack';
+import Orcamento from '../screens/Orcamento';
+import Perfil from '../screens/Perfil';
+
+import { Ionicons } from '@expo/vector-icons';
+
+const Tab = createBottomTabNavigator();
+
+
+export default function AppTabs () {
+    return (
+    <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => {
+              let iconName: keyof typeof Ionicons.glyphMap = 'home';
+
+              if (route.name === 'Home') {
+                iconName = 'home';
+              } else if (route.name === 'Produtos') {
+                iconName = 'list';
+              } else if (route.name === 'Orcamento') {
+                iconName = 'cart-outline';
+              } else if (route.name === 'Perfil') {
+                iconName = 'person';
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: '#007AFF',
+            tabBarInactiveTintColor: 'gray',
+          })}
+        >
+          <Tab.Screen name="Home" component={Home} />
+
+          <Tab.Screen
+            name="Produtos"
+            component={ProdutosStack}
+            options={({ route }) => {
+              const routeName = getFocusedRouteNameFromRoute(route) ?? 'CatalogoScreen';
+
+              if (routeName === 'DetalheProduto') {
+                return {
+                  tabBarStyle: { display: 'none' },
+                };
+              }
+
+              return {
+                tabBarStyle: undefined,
+              };
+            }}
+          />
+
+          <Tab.Screen
+            name="Orcamento"
+            component={Orcamento}
+          />
+
+          <Tab.Screen
+            name="Perfil"
+            component={Perfil}
+          />
+        </Tab.Navigator>
+    );
+}

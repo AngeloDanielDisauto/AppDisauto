@@ -21,7 +21,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Adiciona um produto ao orçamento
   const adicionarProduto = (produto: ProdutoOrcamento) => {
     setProdutosOrcamento((prev) => {
-      // Verifica se já existe para evitar duplicados (opcional)
+      // Verifica se já existe para evitar duplicados
       const jaExiste = prev.find((p) => p.id === produto.id);
       if (jaExiste) return prev; // se já existe, não adiciona de novo
 
