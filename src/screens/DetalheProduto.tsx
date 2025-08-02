@@ -2,8 +2,10 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '../context/AuthContext';
 import { ProdutoComEstoque, ProdutoOrcamento } from '../data/types';
+
+import ListaEstoque from '../components/ListaEstoque';
 
 // tipo do produto para receber pela route
 type DetalheProdutoParams = {
@@ -15,7 +17,7 @@ type DetalheProdutoParams = {
 export default function DetalheProduto() {
   const route = useRoute<RouteProp<DetalheProdutoParams, 'DetalheProduto'>>(); // recebe da rota o produto com a tipagem
   const { produto } = route.params;
-
+  const { user } = useAuth();
   const navigation = useNavigation();
   const { adicionarProduto } = useAppContext(); //função para add produto no array orçamento
   const [estoqueTotal, setEstoqueTotal] = useState(0);
@@ -30,6 +32,9 @@ export default function DetalheProduto() {
       + Number(produto.estoque_maringa) + Number(produto.estoque_rondonopolis) + Number(produto.estoque_rio_do_sul) + Number(produto.estoque_canoinhas) + Number(produto.estoque_cacador)
       + Number(produto.estoque_sao_jose) + Number(produto.estoque_sao_miguel) + Number(produto.estoque_guaramirim));
 
+
+      
+      
   }, []);
 
   useLayoutEffect(() => {
@@ -42,10 +47,10 @@ export default function DetalheProduto() {
   function formatarProduto() {
     // verifica a quantidade de compra para enviar preço com desconto por quantidade
     var precoFinal = 0;
-    if (quantProd < produto.art_qpc){ 
+    if (quantProd < produto.art_qpc) {
       // esse primeiro if evita fazer o restante do processamento na maioria dos casos
       precoFinal = precoBrutoProduto;
-      
+
     } else if (quantProd >= produto.art_qpc3) {
       precoFinal = (precoBrutoProduto * (1 - Number(produto.art_dpc3) / 100));
     } else if (quantProd >= produto.art_qpc2) {
@@ -67,16 +72,15 @@ export default function DetalheProduto() {
   }
 
   function handleAddCarrinho() {
-    if (quantProd > 0) {
-      const novoProduto = formatarProduto();
-
-      adicionarProduto(novoProduto);
-      navigation.goBack();
-      alert("adicionado com sucesso!")
-    } else {
+    if (quantProd < 1) {
       alert("Digite a quantidade");
+      return;
     }
+    const novoProduto = formatarProduto();
 
+    adicionarProduto(novoProduto);
+    navigation.goBack();
+    alert("adicionado com sucesso!")
   }
 
   function handleIrOrcamento() {
@@ -188,10 +192,7 @@ export default function DetalheProduto() {
               </View>
             ) : null}
 
-          <View style={styles.row}>
-            <Text style={styles.cellTitulo}>Estoque Lages</Text>
-            <Text style={styles.cellValor}>{produto.estoque_lages}</Text>
-          </View>
+          <ListaEstoque produto={produto} />
 
           <View style={styles.row}>
             <Text style={styles.cellTitulo}>Estoque Total</Text>
