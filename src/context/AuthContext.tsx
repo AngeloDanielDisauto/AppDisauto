@@ -41,16 +41,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const baseApiLogin = 'https://apibancosql.onrender.com/clientes/login';
 
   useEffect(() => {
-    // Recuperar usuário do AsyncStorage ao iniciar
-    const loadUser = async () => {
-      const userData = await AsyncStorage.getItem('@auth:user');
-      if (userData) {
-        setUser(JSON.parse(userData));
+    // carrega as informações armazenadas local
+    async function loadLocalData() {
+      const storedToken = await AsyncStorage.getItem('@auth:token');
+      const storedUser = await AsyncStorage.getItem('@auth:user');
+
+      if (storedToken && storedUser) {
+        // Define o token globalmente
+        axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        setUser(JSON.parse(storedUser));
       }
       setIsLoading(false);
-    };
+    }
 
-    //loadUser();
+    loadLocalData();
   }, []);
 
   const logar = async (login: string, senha: string) => {
@@ -78,8 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deslogar = async () => {
-    await AsyncStorage.removeItem('@auth:user');
-    setUser(null);
+      await AsyncStorage.removeItem('@auth:user');
+      await AsyncStorage.removeItem('@auth:token');  
+      setUser(null);
   };
 
   return (

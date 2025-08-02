@@ -4,7 +4,7 @@ import Produtos from '../screens/Produtos';
 import DetalheProduto from '../screens/DetalheProduto';
 
 export type ProdutoStackParamList = {
-  Produtos: undefined;
+  ListaProdutos: undefined;
   DetalheProduto: { produto: any };
 };
 
@@ -14,7 +14,7 @@ export function ProdutosStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Produtos"
+        name="ListaProdutos"
         component={Produtos}
         options={{ headerShown: false }} // sem header na lista
       />

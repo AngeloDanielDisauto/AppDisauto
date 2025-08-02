@@ -6,10 +6,11 @@ import { useAppContext } from "../context/AppContext";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from '@react-native-picker/picker';
 
-
+import { useAuth } from "../context/AuthContext";
 
 
 export default function Perfil() {
+    const { deslogar } = useAuth();
     const { produtosOrcamento, totalOrcamento } = useAppContext();
 
     const [login, setLogin] = useState("");
@@ -73,6 +74,13 @@ export default function Perfil() {
                     <Picker.Item label="17 - Guaramirim" />
                     <Picker.Item label="18 - Criciuma" />
                 </Picker>
+
+                <TouchableOpacity
+                    style={styles.icon}
+                    onPress={deslogar}
+                >
+                    <Text>Sair</Text>
+                </TouchableOpacity>
 
             </View>
 
