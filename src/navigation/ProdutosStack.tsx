@@ -3,12 +3,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Produtos from '../screens/Produtos';
 import DetalheProduto from '../screens/DetalheProduto';
 
-export type CatalogoStackParamList = {
-  CatalogoScreen: undefined;
+export type ProdutoStackParamList = {
+  Produtos: undefined;
   DetalheProduto: { produto: any };
 };
 
-const Stack = createNativeStackNavigator<CatalogoStackParamList>();
+const Stack = createNativeStackNavigator<ProdutoStackParamList>();
 
 export function ProdutosStack() {
   return (
