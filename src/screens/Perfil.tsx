@@ -2,83 +2,34 @@ import React, { useState } from "react";
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import { useAppContext } from "../context/AppContext";
-import { Ionicons } from "@expo/vector-icons";
-import { Picker } from '@react-native-picker/picker';
-
 import { useAuth } from "../context/AuthContext";
 
 
 export default function Perfil() {
-    const { deslogar } = useAuth();
-    const { produtosOrcamento, totalOrcamento } = useAppContext();
-
-    const [login, setLogin] = useState("");
-    const [senha, setSenha] = useState("");
-    const [mostrarSenha, setMostrarSenha] = useState(false);
-    const [filial, setFilial] = useState("");
-
+    const { deslogar, user } = useAuth();
 
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
 
-
             <View style={styles.container}>
-                <Text style={styles.titulo}>Perfil</Text>
-
-                <Text>Login:</Text>
                 <TextInput
-                    value={login}
-                    onChangeText={setLogin}
-                    autoCorrect={false}
-                    style={styles.inputLogin}
-                />
+                    style={styles.titulo}
+                    editable={false} >
+                    Olá {user?.nome_completo}
+                </TextInput>
 
-                <Text>Senha:</Text>
-
-                <View style={styles.containerInputSenha}>
-                    <TextInput
-                        value={senha}
-                        onChangeText={setSenha}
-                        secureTextEntry={!mostrarSenha}
-                        autoCorrect={false}
-                        autoCapitalize="none"
-                    />
-                    <TouchableOpacity
-                        style={styles.icon}
-                        onPress={() => setMostrarSenha(!mostrarSenha)}
-                    >
-                        <Ionicons
-                            name={mostrarSenha ? "eye-off" : "eye"}
-                            size={24}
-                            color="gray"
-                        />
-                    </TouchableOpacity>
-                </View>
-
-                <Picker
-                    selectedValue={filial}
-                    onValueChange={(value) => setFilial(value)}
-                >
-                    <Picker.Item label="2 - Lages Matriz" />
-                    <Picker.Item label="3 - Joaçaba" />
-                    <Picker.Item label="4 - Itajaí" />
-                    <Picker.Item label="6 - Tubarão" />
-                    <Picker.Item label="8 - Filial Lages" />
-                    <Picker.Item label="11 - Joinville" />
-                    <Picker.Item label="12 - Rio do Sul" />
-                    <Picker.Item label="13 - Canoinhas" />
-                    <Picker.Item label="14 - Caçador" />
-                    <Picker.Item label="15 - São José" />
-                    <Picker.Item label="16 - São Miguel do Oeste" />
-                    <Picker.Item label="17 - Guaramirim" />
-                    <Picker.Item label="18 - Criciuma" />
-                </Picker>
+                {
+                    user?.data_limite ? 
+                    <Text>Seu acesso expira: {new Date(user.data_limite).toLocaleDateString('pt-BR')}</Text>
+                    : null
+                }
+                
 
                 <TouchableOpacity
-                    style={styles.icon}
+                    style={styles.btnDeslogar}
                     onPress={deslogar}
                 >
-                    <Text>Sair</Text>
+                    <Text style={styles.textBtnDeslogar}>Sair</Text>
                 </TouchableOpacity>
 
             </View>
@@ -95,29 +46,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
     },
     titulo: {
-        fontSize: 26,
+        fontSize: 22,
         textAlign: 'center'
     },
-    inputLogin: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        paddingHorizontal: 10,
-    },
-    containerInputSenha: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        paddingHorizontal: 10,
-    },
-    input: {
-        flex: 1,
-        height: 50,
-    },
-    icon: {
+    btnDeslogar: {
         padding: 5,
+        width: 100,
+        alignItems: 'center',
+        backgroundColor: '#bea1a1',
+    },
+    textBtnDeslogar: {
+        color: '#fff',
+        fontWeight: 'bold',
+        letterSpacing: 1,
+        fontSize: 16
     },
 });

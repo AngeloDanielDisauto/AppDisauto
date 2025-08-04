@@ -13,7 +13,7 @@ type User = {
   desconto_oferta: string | null;
   contador: Number | null;
   contador_acesso: Number | null;
-  dataLimite: string | null;
+  data_limite: string | null;
   data_ultimo_acesso: string | null;
   acesso_estoque_total: Number | null;
   empresa: string | null;
