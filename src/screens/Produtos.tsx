@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { View, TextInput, Text, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, TextInput, Text, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 
 import { ProdutoComEstoque } from "../data/types";
@@ -12,9 +11,15 @@ export default function Produtos() {
   const [produtos, setProdutos] = useState<ProdutoComEstoque[]>([]); // array de produto com tipagem
   const [filtroBusca, setFiltroBusca] = useState('todos');
   const [carregando, setCarregando] = useState(false);
-  const [produtosEncontrados, setProdutosEncontrados] = useState(0);
+  const [produtosEncontrados, setProdutosEncontrados] = useState(null);
   const baseApiBusca = 'https://apibancosql.onrender.com/produtos/busca?';
 
+
+  const filtrarBusca = (valor: string) => {
+    // Permite: letras, números, espaço, !@#$/\()-_=+.,;:? e similares
+    const buscaFiltrada = valor.replace(/[^\w\s!@#\$%\^\&\*\(\)\-_=+.,;:?\/\\]/g, '');
+    setBusca(buscaFiltrada);
+  };
 
 
   // função para busca de produtos
@@ -46,6 +51,10 @@ export default function Produtos() {
 
   // busca 
   async function buscaPorFiltro(filtro: string) {
+    if (busca.length < 1) {
+      Alert.alert("Busca inválida", "Digite algo na busca"); 
+      return;
+    }
     setCarregando(true); // ativa o indicador de carregamento da busca
     try {
       const res = await axios.get(baseApiBusca + filtro + busca);
@@ -81,7 +90,7 @@ export default function Produtos() {
         <TextInput
           placeholder="Pesquisar por código ou descrição..."
           value={busca}
-          onChangeText={setBusca}
+          onChangeText={filtrarBusca}
           onSubmitEditing={handleBusca}
           style={styles.buscaInput}
         />
@@ -94,7 +103,15 @@ export default function Produtos() {
             <Text style={styles.txtBtnBuscar}>Enviar</Text>
           </TouchableOpacity>
 
-          { produtosEncontrados > 0 ? <Text style={{color: "#861a22"}}>{produtosEncontrados} Produtos encontrados</Text> : null}
+          { /* OPERADOR TERNÁRIO PARA VER SE JÁ FOI BUSCADO ALGUM PRODUTO */
+          produtosEncontrados != null ? (
+            /* OPERADOR TERNÁRIO PARA VER SE FOI ACHADO ALGUM PRODUTO */
+            produtosEncontrados > 0 ?
+            <Text style={{color: "#861a22"}}>{produtosEncontrados} Produtos encontrados</Text>
+            :
+            <Text style={{color: "#861a22"}}>Não foi encontrado nenhum produto</Text>
+            ) : null
+            }
         </View>
 
 
@@ -129,7 +146,7 @@ export default function Produtos() {
 
 const styles = StyleSheet.create({
   orcamentoContainer: {
-    paddingTop: 10,
+    paddingVertical: 10,
     backgroundColor: '#f2f2f2',
   },
   containerBusca: {
