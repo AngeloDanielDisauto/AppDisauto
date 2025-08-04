@@ -11,18 +11,21 @@ import {
   Alert
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { Ionicons } from "@expo/vector-icons";
+
 
 export default function Login() {
   const { logar, isLoading } = useAuth();
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   async function handleLogin() {
     setLoading(true);
     try {
       await logar(login, senha);
-    } catch (err: any) {      
+    } catch (err: any) {
       Alert.alert('Erro', err.message || 'Falha no login');
     }
     setLoading(false);
@@ -36,7 +39,7 @@ export default function Login() {
         resizeMode="contain"
       />
 
-      <Text style={styles.title}>Bem-vindo</Text>
+      <Text style={styles.title}>Bem-vindo à DISAUTO</Text>
 
       <TextInput
         placeholder="Login"
@@ -44,15 +47,29 @@ export default function Login() {
         onChangeText={setLogin}
         value={login}
         autoCapitalize="none"
+        placeholderTextColor={'#999999'}
       />
+      <View style={styles.containerInputSenha}>
+        <TextInput
+          placeholder="Senha"
+          style={styles.inputSenha}
+          onChangeText={setSenha}
+          value={senha}
+          secureTextEntry={!mostrarSenha}
+          placeholderTextColor={"#999999"}
+        />
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={() => setMostrarSenha(!mostrarSenha)}
+        >
+          <Ionicons
+            name={mostrarSenha ? "eye-off" : "eye"}
+            size={24}
+            color="gray"
+          />
+        </TouchableOpacity>
+      </View>
 
-      <TextInput
-        placeholder="Senha"
-        style={styles.input}
-        onChangeText={setSenha}
-        value={senha}
-        secureTextEntry
-      />
 
       <TouchableOpacity
         style={styles.button}
@@ -89,6 +106,20 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'center',
   },
+  containerInputSenha: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  icon: {
+    padding: 5,
+  },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
@@ -97,6 +128,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     marginBottom: 16,
+  },
+  inputSenha: {
+    flex: 1,
+    height: 50,
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#861a22',

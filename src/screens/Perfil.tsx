@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, TextInput, Text, ScrollView, StyleSheet, Button, TouchableOpacity } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from "react";
+import { View, TextInput, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import { useAppContext } from "../context/AppContext";
 import { Ionicons } from "@expo/vector-icons";
