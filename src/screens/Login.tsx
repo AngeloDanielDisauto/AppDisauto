@@ -57,6 +57,8 @@ export default function Login() {
           value={senha}
           secureTextEntry={!mostrarSenha}
           placeholderTextColor={"#999999"}
+          onSubmitEditing={handleLogin}
+
         />
         <TouchableOpacity
           style={styles.icon}
@@ -128,11 +130,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     marginBottom: 16,
+    color: '#000',
   },
   inputSenha: {
     flex: 1,
     height: 50,
     fontSize: 16,
+    color: '#000',
   },
   button: {
     backgroundColor: '#861a22',

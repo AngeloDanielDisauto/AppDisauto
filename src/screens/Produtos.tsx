@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { View, TextInput, Text, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
+import { View, TextInput, Text, ActivityIndicator, StyleSheet, FlatList, TouchableOpacity, Alert, Keyboard } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 
 import { ProdutoComEstoque } from "../data/types";
@@ -60,6 +60,7 @@ export default function Produtos() {
       const res = await axios.get(baseApiBusca + filtro + busca);
       setProdutos(res.data);
       setProdutosEncontrados(res.data.length);
+      Keyboard.dismiss()
     } catch (err) {
       console.error(err);
     } finally {
