@@ -1,8 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
-import { useAuth } from '../context/AuthContext';
 import { ProdutoComEstoque, ProdutoOrcamento } from '../data/types';
 
 import ListaEstoque from '../components/ListaEstoque';
@@ -17,18 +16,10 @@ type DetalheProdutoParams = {
 export default function DetalheProduto() {
   const route = useRoute<RouteProp<DetalheProdutoParams, 'DetalheProduto'>>(); // recebe da rota o produto com a tipagem
   const { produto } = route.params;
-  const { user } = useAuth();
   const navigation = useNavigation();
   const { adicionarProduto } = useAppContext(); //função para add produto no array orçamento
-  const [estoqueTotal, setEstoqueTotal] = useState(0);
   const [quantProd, setQuantProd] = useState(0);
   const precoBrutoProduto = Math.ceil(parseFloat(produto.preco_bruto.replace(',', '.')) * 0.5 * 0.9 * 100) / 100;
-
-
-
-  useEffect(() => {     
-      
-  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,14 +57,14 @@ export default function DetalheProduto() {
 
   function handleAddCarrinho() {
     if (quantProd < 1) {
-      alert("Digite a quantidade");
+      Alert.alert("Quantidade inválida","Digite uma quantidade acima de 1");
       return;
     }
     const novoProduto = formatarProduto();
 
     adicionarProduto(novoProduto);
     navigation.goBack();
-    alert("adicionado com sucesso!")
+    Alert.alert("Adicionado ao orçamento", `${produto.descricao} foi adicionado ao orçamento com sucesso`)
   }
 
   function handleIrOrcamento() {
@@ -82,9 +73,9 @@ export default function DetalheProduto() {
 
       adicionarProduto(novoProduto);
       navigation.getParent()?.navigate('Orcamento');
-      alert("adicionado com sucesso!")
+      Alert.alert("Adicionado ao orçamento", `${produto.descricao} foi adicionado ao orçamento com sucesso`)
     } else {
-      alert("Digite a quantidade");
+      Alert.alert("Quantidade inválida","Digite uma quantidade acima de 1");
     }
 
   }
