@@ -147,6 +147,7 @@ export default function Produtos() {
 const styles = StyleSheet.create({
   orcamentoContainer: {
     paddingVertical: 10,
+    paddingHorizontal: 15,
     backgroundColor: '#f2f2f2',
   },
   containerBusca: {
@@ -174,10 +175,14 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     color: "#000",
+    width: '60%',
+    height: 50,
+    justifyContent: 'center',
+    marginVertical: 15,
+    paddingVertical: 0,    
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    marginVertical: 15
+    borderColor: '#696969',
+    borderRadius: 10
   },
   escolhaBusca: {
     color: "#000",
