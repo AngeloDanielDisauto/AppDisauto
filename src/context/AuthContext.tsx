@@ -6,23 +6,23 @@ import axios from 'axios';
 type User = {
   id: Number;
   codigo: string | null;
-  nomeCompleto: string | null;
+  nome_completo: string | null;
   desconto_1: string | null;
   desconto_2: string | null;
   desconto_3: string | null;
-  descontoOferta: string | null;
+  desconto_oferta: string | null;
   contador: Number | null;
-  contadorAcesso: Number | null;
+  contador_acesso: Number | null;
   dataLimite: string | null;
-  dataUltimoAcesso: string | null;
-  acessoEstoqueTotal: Number | null;
+  data_ultimo_acesso: string | null;
+  acesso_estoque_total: Number | null;
   empresa: string | null;
   cidade: string | null;
   uf: string | null;
   mwm: string | null;
-  postoMasterPower: string | null;
-  servicoMasterPower: string | null;
-  aliquotaCliente: string | null;
+  posto_master_power: string | null;
+  servico_master_power: string | null;
+  aliquota_cliente: string | null;
 };
 
 type AuthContextType = {
@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await AsyncStorage.setItem('@auth:token', token);
       await AsyncStorage.setItem('@auth:user', JSON.stringify(user));
 
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(user);
     } catch (error: any) {
       // retorna erro
@@ -84,7 +85,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const deslogar = async () => {
       await AsyncStorage.removeItem('@auth:user');
-      await AsyncStorage.removeItem('@auth:token');  
+      await AsyncStorage.removeItem('@auth:token');
+      axios.defaults.headers.common['Authorization'] = "";
       setUser(null);
   };
 

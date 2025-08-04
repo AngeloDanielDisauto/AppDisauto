@@ -26,14 +26,7 @@ export default function DetalheProduto() {
 
 
 
-  useEffect(() => {
-    // calcular estoque total do produto
-    setEstoqueTotal(Number(produto.estoque_lages) + Number(produto.estoque_joacaba) + Number(produto.estoque_itajai) + Number(produto.estoque_tubarao) + Number(produto.estoque_filial_lages)
-      + Number(produto.estoque_maringa) + Number(produto.estoque_rondonopolis) + Number(produto.estoque_rio_do_sul) + Number(produto.estoque_canoinhas) + Number(produto.estoque_cacador)
-      + Number(produto.estoque_sao_jose) + Number(produto.estoque_sao_miguel) + Number(produto.estoque_guaramirim));
-
-
-      
+  useEffect(() => {     
       
   }, []);
 
@@ -192,12 +185,8 @@ export default function DetalheProduto() {
               </View>
             ) : null}
 
-          <ListaEstoque produto={produto} />
+          { <ListaEstoque produto={produto} /> }
 
-          <View style={styles.row}>
-            <Text style={styles.cellTitulo}>Estoque Total</Text>
-            <Text style={styles.cellValor}>{estoqueTotal}</Text>
-          </View>
 
           <View style={styles.row}>
             <Text style={styles.cellTitulo}>Quantidade</Text>

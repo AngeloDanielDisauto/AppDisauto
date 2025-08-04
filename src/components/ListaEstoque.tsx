@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from 'react-native';
 import { ProdutoComEstoque } from "../data/types";
 import { useAuth } from "../context/AuthContext";
@@ -10,7 +10,10 @@ export default function ListaEstoque({ produto }: Props) {
 
   const [cidade, setCidade] = useState('');
   const [estoqueCidade, setEstoqueCidade] = useState('');
-  function listaCidade() {
+  const [estoqueTotal, setEstoqueTotal] = useState(0);
+
+  useEffect(() => {
+
     const codCidade = Number(user?.empresa);
 
     switch (codCidade) {
@@ -66,24 +69,93 @@ export default function ListaEstoque({ produto }: Props) {
         setCidade("Criciuma");
         setEstoqueCidade(produto.estoque_filial_lages);
         break;
+      default:
+        setCidade("Lages Matriz");
+        setEstoqueCidade(produto.estoque_lages);
+        break;
     }
-  }
+
+    // calcular estoque total do produto
+    setEstoqueTotal(Number(produto.estoque_lages) + Number(produto.estoque_joacaba) + Number(produto.estoque_itajai) + Number(produto.estoque_tubarao) + Number(produto.estoque_filial_lages)
+      + Number(produto.estoque_maringa) + Number(produto.estoque_rondonopolis) + Number(produto.estoque_rio_do_sul) + Number(produto.estoque_canoinhas) + Number(produto.estoque_cacador)
+      + Number(produto.estoque_sao_jose) + Number(produto.estoque_sao_miguel) + Number(produto.estoque_guaramirim));
 
 
-  listaCidade();
-
+  }, []);
   return (
     <>
-      {user?.acessoEstoqueTotal == 0 ? (
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Estoque {cidade}</Text>
-          <Text style={styles.cellValor}>{estoqueCidade}</Text>
+      {user?.acesso_estoque_total == 0 ? (
+        <View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque {cidade}</Text>
+            <Text style={styles.cellValor}>{estoqueCidade}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Total</Text>
+            <Text style={styles.cellValor}>{estoqueTotal}</Text>
+          </View>
         </View>
+
       ) : (
-        <View style={styles.row}>
-          <Text style={styles.cellTitulo}>Estoque {cidade}</Text>
-          <Text style={styles.cellValor}>{produto.estoque_lages}</Text>
+        <View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Lages Matriz</Text>
+            <Text style={styles.cellValor}>{produto.estoque_lages}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Joaçaba</Text>
+            <Text style={styles.cellValor}>{produto.estoque_joacaba}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Itajaí</Text>
+            <Text style={styles.cellValor}>{produto.estoque_itajai}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Tubarão</Text>
+            <Text style={styles.cellValor}>{produto.estoque_tubarao}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Lages Filial</Text>
+            <Text style={styles.cellValor}>{produto.estoque_filial_lages}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Joinville</Text>
+            <Text style={styles.cellValor}>{produto.estoque_rondonopolis}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Rio Do Sul</Text>
+            <Text style={styles.cellValor}>{produto.estoque_rio_do_sul}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Canoinhas</Text>
+            <Text style={styles.cellValor}>{produto.estoque_canoinhas}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Caçador</Text>
+            <Text style={styles.cellValor}>{produto.estoque_cacador}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque São José</Text>
+            <Text style={styles.cellValor}>{produto.estoque_sao_jose}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque São Miguel do Oeste</Text>
+            <Text style={styles.cellValor}>{produto.estoque_sao_miguel}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Guaramirim</Text>
+            <Text style={styles.cellValor}>{produto.estoque_guaramirim}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Criciúma</Text>
+            <Text style={styles.cellValor}>{0}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.cellTitulo}>Estoque Total</Text>
+            <Text style={styles.cellValor}>{estoqueTotal}</Text>
+          </View>
         </View>
+
       )}
     </>
   );
