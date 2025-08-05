@@ -49,6 +49,7 @@ export default function DetalheProduto() {
       id: produto.id,
       codigo: produto.codigo,
       descricao: produto.descricao,
+      referencia: produto.referencia,
       preco: precoFinal,
       quantidade: quantProd
     };

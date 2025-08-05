@@ -45,6 +45,7 @@ export interface ProdutoComEstoque {
 export interface ProdutoOrcamento {
   id: number;
   codigo: string;
+  referencia: string;
   descricao: string;
   preco: number;
   quantidade: number;
