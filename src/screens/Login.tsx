@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   input: {
+    height: 50,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
