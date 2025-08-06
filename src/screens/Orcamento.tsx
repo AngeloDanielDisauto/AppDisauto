@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { View, TextInput, Text, ScrollView, StyleSheet, Button, TouchableOpacity } from "react-native";
+import React, { } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import axios from 'axios';
 import { useAppContext } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
-import TabelaOrcamento from "../components/TabelaOrcamento";
-
 import { useGerarPdfOrcamento } from '../utils/GerarPdfOrcamento';
 
+import TabelaOrcamento from "../components/TabelaOrcamento";
+import OrcamentoBotoes from "../components/OrcamentoBotoes";
 
 
 export default function Orcamento() {
-    const { produtosOrcamento, totalOrcamento } = useAppContext();
+    const { produtosOrcamento, totalOrcamento, limparOrcamento } = useAppContext();
     const { user } = useAuth();
-    console.log(produtosOrcamento);
 
     const { gerarECompartilharPdf } = useGerarPdfOrcamento();
 
 
-
+    // função para mandar o JSON para api
+    // API monta o txt e envia para o site Disauto
     async function handleEnviarPedido() {
         const baseApiTxt = 'https://apibancosql.onrender.com/orcamento/gerar-pedido?';
 
@@ -27,7 +27,6 @@ export default function Orcamento() {
             "produtos": produtosOrcamento
         }
 
-        console.log(jsonMontaTxt);
         try {
             const res = await axios.post(baseApiTxt, jsonMontaTxt, {
                 headers: {
@@ -35,12 +34,14 @@ export default function Orcamento() {
                 }
             });
 
-            console.log('Resposta da API:', res.data);
+            if (res.data.success) {
+                limparOrcamento();
+                Alert.alert("Pedido enviado", "Pedido enviado com sucesso!");
+            }
+
         } catch (error: any) {
-            console.error('Erro ao gerar o .txt:', error.message);
-            if (error.response) {
-                console.error('Status:', error.response.status);
-                console.error('Detalhes:', error.response.data);
+            if (error.response.data) {
+                Alert.alert(`Erro ${error.response.status}`, error.response.data.message);
             }
         }
 
@@ -48,21 +49,23 @@ export default function Orcamento() {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
-
-
+        <View style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
             <View style={styles.container}>
                 <Text style={styles.titulo}>Orçamento</Text>
-
-                <TabelaOrcamento produtos={produtosOrcamento} totalGeral={totalOrcamento} />
-
-
+                {produtosOrcamento.length > 0 ? (
+                    <View>
+                        <TabelaOrcamento produtos={produtosOrcamento} totalGeral={totalOrcamento} />
+                        <OrcamentoBotoes
+                            onLimparOrcamento={limparOrcamento}
+                            onGerarPdf={gerarECompartilharPdf}
+                            onEnviarPedido={handleEnviarPedido}
+                        />
+                    </View>
+                )
+                    :
+                    <Text style={styles.txtOrcamentoVazio}>Adicione itens ao orçamento!</Text>
+                }
             </View>
-
-            <Button title="Gerar e Compartilhar PDF" onPress={gerarECompartilharPdf} />
-            <TouchableOpacity style={styles.btnEnviarPedido} onPress={handleEnviarPedido}>
-                <Text style={styles.txtEnviarPedido}>Enviar Pedido</Text>
-            </TouchableOpacity>
 
 
         </View>
@@ -76,17 +79,18 @@ const styles = StyleSheet.create({
     },
     titulo: {
         fontSize: 26,
-        textAlign: 'center'
-    },
-    btnEnviarPedido: {
-        width: 150,
-        paddingVertical: 10,
-        backgroundColor: '#8f1111',
-    },
-    txtEnviarPedido: {
-        fontSize: 16,
-        color: '#fff',
+        textAlign: 'center',
         fontWeight: 'bold',
-        textAlign: 'center'
-    }
+        marginBottom: 10,
+    },
+    txtOrcamentoVazio: {
+        fontSize: 26,
+        color: "#861a22",
+        fontWeight: 'bold',
+        borderWidth: 1,
+        borderColor: '#861a22',
+        textAlign: 'center',
+        paddingVertical: 10
+    },
+
 });
