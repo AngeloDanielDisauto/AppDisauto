@@ -60,6 +60,7 @@ export default function Produtos() {
       const res = await axios.get(baseApiBusca + filtro + busca);
       setProdutos(res.data);
       setProdutosEncontrados(res.data.length);
+      setBusca('');
       Keyboard.dismiss()
     } catch (err) {
       console.error(err);
