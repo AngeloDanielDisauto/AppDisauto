@@ -73,6 +73,7 @@ export default function DetalheProduto() {
       const novoProduto = formatarProduto();
 
       adicionarProduto(novoProduto);
+      navigation.goBack();
       navigation.getParent()?.navigate('Orcamento');
       Alert.alert("Adicionado ao orçamento", `${produto.descricao} foi adicionado ao orçamento com sucesso`)
     } else {
