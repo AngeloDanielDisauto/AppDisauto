@@ -11,11 +11,12 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
 import { Ionicons } from "@expo/vector-icons";
 
-
 export default function Login() {
+  const navigation = useNavigation();
   const { logar, isLoading } = useAuth();
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
@@ -50,52 +51,70 @@ export default function Login() {
         style={styles.logo}
         resizeMode="contain"
       />
-
-      <Text style={styles.title}>Bem-vindo à DISAUTO</Text>
-
-      <TextInput
-        placeholder="Login"
-        style={styles.input}
-        onChangeText={setLogin}
-        value={login}
-        autoCapitalize="none"
-        placeholderTextColor={'#999999'}
-      />
-      <View style={styles.containerInputSenha}>
-        <TextInput
-          placeholder="Senha"
-          style={styles.inputSenha}
-          onChangeText={setSenha}
-          value={senha}
-          secureTextEntry={!mostrarSenha}
-          placeholderTextColor={"#999999"}
-          onSubmitEditing={handleLogin}
-
-        />
-        <TouchableOpacity
-          style={styles.icon}
-          onPress={() => setMostrarSenha(!mostrarSenha)}
-        >
-          <Ionicons
-            name={mostrarSenha ? "eye-off" : "eye"}
-            size={24}
-            color="gray"
+      <View>
+        <Text style={styles.title}>Bem-vindo à</Text>
+        <Text style={styles.titleDisauto}>Disauto</Text>
+      </View>
+      <View style={{ width: '100%', gap: 15 }}>
+        <View style={styles.containerInput}>
+          <Text style={{ position: 'absolute', top: 4, left: 8, fontFamily: 'AnonymousPro_400Regular' }}>Login</Text>
+          <TextInput
+            style={styles.inputLogin}
+            onChangeText={setLogin}
+            value={login}
+            autoCapitalize="none"
+            placeholderTextColor={'#999999'}
+            textAlignVertical='bottom'
           />
+        </View>
+
+        <View style={styles.containerInputSenha}>
+          <Text style={{ position: 'absolute', top: 4, left: 8, fontFamily: 'AnonymousPro_400Regular' }}>Senha</Text>
+          <TextInput
+            style={styles.inputSenha}
+            onChangeText={setSenha}
+            value={senha}
+            secureTextEntry={!mostrarSenha}
+            onSubmitEditing={handleLogin}
+            textAlignVertical='bottom'
+          />
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => setMostrarSenha(!mostrarSenha)}
+          >
+            <Ionicons
+              name={mostrarSenha ? "eye-off" : "eye"}
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
+
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}
+          disabled={loading || isLoading}
+        >
+          {loading || isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Entrar</Text>
+          )}
         </TouchableOpacity>
+
+        <View style={{ width: '100%', alignItems: 'center'}}>
+          <TouchableOpacity
+            style={styles.containerContato}
+            onPress={() => navigation.navigate('Contato' as never)}
+          >
+            <Text style={{ color: "#0866FF", fontSize: 16, fontWeight: 'bold' }}>Não possuo uma conta</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleLogin}
-        disabled={loading || isLoading}
-      >
-        {loading || isLoading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Entrar</Text>
-        )}
-      </TouchableOpacity>
+
     </KeyboardAvoidingView>
   );
 }
@@ -103,63 +122,72 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    gap: 30,
     backgroundColor: '#fff',
-    paddingHorizontal: 24,
-    justifyContent: 'center',
+    paddingHorizontal: 20,
+    alignItems: 'center',
   },
   logo: {
-    width: 180,
-    height: 120,
-    alignSelf: 'center',
-    marginBottom: 32,
+    width: 271,
+    height: 171,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '600',
+    fontSize: 42,
+    lineHeight: 42,
     color: '#861a22',
-    marginBottom: 24,
     textAlign: 'center',
   },
+  titleDisauto: {
+    color: '#861A22',
+    fontSize: 64,
+    lineHeight: 64,
+    fontWeight: 'bold',
+    textAlign: 'center',
+
+  },
+
+  icon: {
+    alignSelf: 'center',
+    marginRight: 10
+  },
+  containerInput: {
+    height: 60,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+  },
+  inputLogin: {
+    flex: 1,
+    paddingLeft: 16,
+    fontSize: 16,
+    color: '#000',
+  },
   containerInputSenha: {
+    height: 60,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    marginBottom: 16,
-  },
-  icon: {
-    padding: 5,
-  },
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    marginBottom: 16,
-    color: '#000',
+    borderRadius: 6,
   },
   inputSenha: {
     flex: 1,
-    height: 50,
+    paddingLeft: 16,
     fontSize: 16,
     color: '#000',
   },
   button: {
+    height: 60,
     backgroundColor: '#861a22',
     paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
+    borderRadius: 6,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 28,
+    lineHeight: 28,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
+  containerContato: {  },
 });
