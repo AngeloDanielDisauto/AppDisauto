@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../context/AppContext';
 import { ProdutoComEstoque, ProdutoOrcamento } from '../data/types';
@@ -88,7 +88,10 @@ export default function DetalheProduto() {
   const url = 'https://www.disauto.com.br/admin/img_produto/ImgProd' + codSemDigito + '.jpg';
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <KeyboardAvoidingView 
+      style={{ flex: 1, backgroundColor: '#fff' }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
 
       <ScrollView contentContainerStyle={styles.container}>
 
@@ -211,7 +214,7 @@ export default function DetalheProduto() {
         </View>
 
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

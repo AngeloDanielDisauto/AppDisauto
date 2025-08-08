@@ -3,6 +3,7 @@ import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 import { useAppContext } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 
 // Função para converter logo local para base64
 async function getLogoBase64(): Promise<string> {
@@ -18,6 +19,7 @@ async function getLogoBase64(): Promise<string> {
 
 export function useGerarPdfOrcamento() {
   const { produtosOrcamento, totalOrcamento } = useAppContext();
+  const { user } = useAuth();
 
   const gerarECompartilharPdf = async () => {
     // Converte a logo para base64
@@ -28,8 +30,7 @@ export function useGerarPdfOrcamento() {
       timeStyle: 'short',
     });
 
-    const nomeCliente = 'DISAUTO DISTRIBUIDORA DE AUTOPEÇAS LTDA';
-    const enderecoCliente = 'Rua Exemplo, 123 - Cidade/UF';
+    const infoCliente = `${user?.nome_completo}<br>${user?.cidade}/${user?.uf}`;
 
     const produtosHTML = produtosOrcamento
       .map(
@@ -37,9 +38,9 @@ export function useGerarPdfOrcamento() {
           <tr class="linhaTabela">
             <td>${item.codigo}</td>
             <td>${item.descricao}</td>
-            <td class="preco">R$ ${item.preco.toFixed(2)}</td>
+            <td>R$ ${item.preco.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</td>
             <td>${item.quantidade}</td>
-            <td>R$ ${(item.preco * item.quantidade).toFixed(2)}</td>
+            <td class="precoTotal">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</td>
           </tr>
         `
       )
@@ -57,7 +58,7 @@ export function useGerarPdfOrcamento() {
 
             body {
               font-family: Arial, sans-serif;
-              font-size: 12pt;
+              font-size: 16pt;
               margin: 0;
               color: #333;
               width: 100%;
@@ -81,18 +82,19 @@ export function useGerarPdfOrcamento() {
               height: auto;
             }
 
-            .info-cliente {
+            .area-info {
               text-align: right;
+              width: 100%;
             }
 
-            .info-cliente h2 {
+            .area-info h2 {
               margin: 0;
               font-size: 16pt;
             }
 
-            .info-cliente p {
+            .area-info h3 {
               margin: 2px 0;
-              font-size: 11pt;
+              font-size: 14pt;
             }
 
             .data-hora {
@@ -126,8 +128,8 @@ export function useGerarPdfOrcamento() {
               border-bottom: 1px solid #ddd;
             }
 
-            .preco {
-              color: green;
+            .precoTotal {
+              color: '#000';
               font-weight: bold;
             }
 
@@ -154,9 +156,9 @@ export function useGerarPdfOrcamento() {
             <!-- Cabeçalho -->
             <div class="header">
               <img src="${logoBase64}" class="logo" />
-              <div class="info-cliente">
-                <h2>${nomeCliente}</h2>
-                <p>${enderecoCliente}</p>
+              <div class="area-info">
+                <h2>DISAUTO DISTRIBUIDORA DE AUTOPEÇAS LTDA</h2>
+                <h3>${infoCliente}</h3>
               </div>
             </div>
 
@@ -175,7 +177,7 @@ export function useGerarPdfOrcamento() {
               ${produtosHTML}
               <tr class="linhaTotal">
                 <td colspan="4" class="label">TOTAL GERAL</td>
-                <td>R$ ${totalOrcamento.toFixed(2)}</td>
+                <td style="text-align: center;">R$ ${totalOrcamento.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</td>
               </tr>
             </table>
           </div>

@@ -40,10 +40,10 @@ export default function TabelaOrcamento({ produtos, totalGeral }: Props) {
             <View style={styles.linhaTabela}>
               <Text style={[styles.cellTabela, { width: 100 }]}>{item.codigo}</Text>
               <Text style={[styles.cellTabela, { width: 200 }]}>{item.descricao}</Text>
-              <Text style={[styles.cellTabelaPreco, { width: 100 }]}>R${(item.preco).toFixed(2)}</Text>
+              <Text style={[styles.cellTabelaPreco, { width: 100 }]}>R${(item.preco).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</Text>
               <Text style={[styles.cellTabela, { width: 100 }]}>{item.quantidade}</Text>
               <Text style={[styles.cellTabela, { width: 120 }]}>
-                R${(item.preco * item.quantidade).toFixed(2)}
+                R${(item.preco * item.quantidade).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
               </Text>
               <TouchableOpacity style={[styles.cellTabela, { width: 40 }]} onPress={() => handleApagarItem(item)}>
                 <Ionicons name={'trash'} size={20} />
@@ -55,7 +55,7 @@ export default function TabelaOrcamento({ produtos, totalGeral }: Props) {
         <View style={styles.linhaTotal}>
           <Text style={[styles.textoTotal, { width: 500 }]}>TOTAL GERAL</Text>
           <Text style={[styles.textoTotalValor, { width: 120 }]}>
-            R${totalGeral.toFixed(2)}
+            R${totalGeral.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
           </Text>
           <Text style={[styles.cellTabelaCabecalho, { width: 40 }]}></Text>
 

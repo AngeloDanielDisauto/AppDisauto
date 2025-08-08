@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // carrega as informações armazenadas local
     async function loadLocalData() {
       const storedToken = await AsyncStorage.getItem('@auth:token');
-      const storedUser = await AsyncStorage.getItem('@auth:user');
+      const storedUser = await AsyncStorage.getItem('@auth:user');  
 
       if (storedToken && storedUser) {
         // Define o token globalmente

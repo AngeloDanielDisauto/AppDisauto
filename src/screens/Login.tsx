@@ -1,4 +1,3 @@
-// src/screens/LoginScreen.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -8,7 +7,9 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  Alert
+  Alert,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Ionicons } from "@expo/vector-icons";
@@ -22,6 +23,14 @@ export default function Login() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   async function handleLogin() {
+    if (login.length < 1) {
+      Alert.alert("Usuário inválido", "Dígite o login");
+      return;
+    }
+    if (senha.length < 1) {
+      Alert.alert("Senha inválida", "Dígite a senha");
+      return;
+    }
     setLoading(true);
     try {
       await logar(login, senha);
@@ -32,7 +41,10 @@ export default function Login() {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <Image
         source={require('../assets/logo.png')}
         style={styles.logo}
@@ -84,7 +96,7 @@ export default function Login() {
           <Text style={styles.buttonText}>Entrar</Text>
         )}
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -92,7 +104,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 24,
+    paddingHorizontal: 24,
     justifyContent: 'center',
   },
   logo: {

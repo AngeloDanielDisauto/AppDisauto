@@ -49,31 +49,28 @@ export default function Orcamento() {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
-            <View style={styles.container}>
-                <Text style={styles.titulo}>Orçamento</Text>
-                {produtosOrcamento.length > 0 ? (
-                    <View>
-                        <TabelaOrcamento produtos={produtosOrcamento} totalGeral={totalOrcamento} />
-                        <OrcamentoBotoes
-                            onLimparOrcamento={limparOrcamento}
-                            onGerarPdf={gerarECompartilharPdf}
-                            onEnviarPedido={handleEnviarPedido}
-                        />
-                    </View>
-                )
-                    :
-                    <Text style={styles.txtOrcamentoVazio}>Adicione itens ao orçamento!</Text>
-                }
-            </View>
-
-
+        <View style={styles.container}>
+            {produtosOrcamento.length > 0 ? (
+                <View>
+                    <TabelaOrcamento produtos={produtosOrcamento} totalGeral={totalOrcamento} />
+                    <OrcamentoBotoes
+                        onLimparOrcamento={limparOrcamento}
+                        onGerarPdf={gerarECompartilharPdf}
+                        onEnviarPedido={handleEnviarPedido}
+                    />
+                </View>
+            )
+                :
+                <Text style={styles.txtOrcamentoVazio}>Adicione itens ao orçamento!</Text>
+            }
         </View>
+
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 10,
         backgroundColor: '#f2f2f2',
     },

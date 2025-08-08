@@ -105,7 +105,8 @@ export default function Produtos() {
             <Text style={styles.txtBtnBuscar}>Enviar</Text>
           </TouchableOpacity>
 
-          { /* OPERADOR TERNÁRIO PARA VER SE JÁ FOI BUSCADO ALGUM PRODUTO */
+          { 
+          /* OPERADOR TERNÁRIO PARA VER SE JÁ FOI BUSCADO ALGUM PRODUTO */
           produtosEncontrados != null ? (
             /* OPERADOR TERNÁRIO PARA VER SE FOI ACHADO ALGUM PRODUTO */
             produtosEncontrados > 0 ?
